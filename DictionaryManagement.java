@@ -1,32 +1,45 @@
 package com.company;
 
+import com.sun.deploy.panel.DeleteFilesDialog;
 import com.sun.xml.internal.ws.api.ha.StickyFeature;
 
-import java.util.Collections;
-import java.util.Scanner;
+import java.util.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+
 public class DictionaryManagement extends Dictionary
 
 {
     public Dictionary dictionary = new Dictionary();
-    private Scanner scan = new Scanner(System.in);
-    public void insertFromCommandline(int n){
+    public void insertFromCommandline(){
+        System.out.println("Nhap so tu ban muon them");
+        Scanner scan = new Scanner(System.in);
+        int n = scan.nextInt();
+        scan.nextLine();
         for(int i=0; i<n ; i++){
             Word temp = new Word();
             String s;
             String[] a=new String[2];
+            System.out.println("Nhap tu va nghia cua tu thu "+(i+1) +" cach nhau boi dau tab");
             s=scan.nextLine();
             a=s.split("\t",2);
             temp.setWord_taget(a[0]);
             temp.setWord_explain(a[1]);
             dictionary.word.add(temp);
         }
+    }
+    public void sortList(){
+        Comparator<Word> check = new Comparator<Word>() {
+            @Override
+            public int compare(Word o1, Word o2) {
+                return o1.getWord_taget().compareTo(o2.getWord_taget());
+            }
+        };
+        Collections.sort(dictionary.word,check);
     }
     public void insertFromFile() {
         BufferedReader in = null;
@@ -45,67 +58,90 @@ public class DictionaryManagement extends Dictionary
             System.out.println("Unable to open file");
         }
     }
-    public void dictionaryLookup(String s) {
-        int i=0;
-        for (; i < dictionary.word.size(); i++) {
-            if (dictionary.word.get(i).getWord_taget().equals(s)) {
-                break;
+    public void dictionaryLookup() {
+        System.out.println("Nhap tu ban muon tim kiem chinh xac");
+        Scanner scan = new Scanner(System.in);
+        String str = scan.nextLine();
+        int i= binarySreachWord(str);
+        if(i==-1) {
+            System.out.println("Khong tim duoc tu "+str);
+        }
+        else
+            dictionary.word.get(i).printWord();
+
+    }
+    public void  dictionarySearcher(){
+        System.out.println("Nhap chu cai can tim ");
+        Scanner scan = new Scanner(System.in);
+        String s = scan.nextLine();
+        boolean f = false;
+        for(int i = 0; i < dictionary.word.size(); i++){
+            if(dictionary.word.get(i).getWord_taget().startsWith(s)){
+                dictionary.word.get(i).printWord();
+                f = true;
             }
         }
-        System.out.println( dictionary.word.get(i).getWord_explain());
+        if(f == false) System.out.println("Khong tim duoc ");
+    }
+    public int binarySreachWord(String str) {
+        sortList();
+        int n = dictionary.word.size();
+        int lo = 0;
+        int hi = n-1;
+        int mid;
+        while (lo <= hi){
+            mid = lo +(hi-lo)/2;
+            int tem = dictionary.word.get(mid).compareTo(str);
+            if(tem < 0){
+                lo = mid +1;
+            }
+            else  if(tem >0){
+                hi = mid -1;
+            }
+            else {
+                return mid;
+            }
+        }
+        return -1;
     }
     public void dictionaryFix(){
-        System.out.println("1   thay doi nghia");
-        System.out.println("2   thay doi tu");
-        System.out.println("3   xoa tu");
         Scanner scan = new Scanner(System.in);
-        int i=0;
-
         System.out.println("Nhap tu ban muon sua hoac xoa");
         String s=scan.nextLine();
+        System.out.println("Nhap thao tac ban muon thuc hien");
+        System.out.println("1   Thay doi nghia");
+        System.out.println("2   Thay doi tu");
+        System.out.println("3   Xoa tu");
+
+        int index = binarySreachWord(s);
         int a=scan.nextInt();
         if(a==1) {
             Scanner sc = new Scanner(System.in);
-            System.out.println("moi nhap nghia moi");
+            System.out.println("Moi nhap nghia moi");
             String string =sc.nextLine();
-            for (; i < dictionary.word.size(); i++) {
-                if (dictionary.word.get(i).getWord_taget().equals(s)) {
-                    dictionary.word.get(i).setWord_explain(string);
-                }
-            }
+            dictionary.word.get(index).setWord_explain(string);
         }
         if(a==2) {
             Scanner sc = new Scanner(System.in);
-            System.out.println("moi nhap tu moi");
+            System.out.println("Moi nhapp tu moi");
             String string =sc.nextLine();
-            for (; i < dictionary.word.size(); i++) {
-                if (dictionary.word.get(i).getWord_taget().equals(s)) {
-                    dictionary.word.get(i).setWord_taget(string);
-                }
-            }
+            dictionary.word.get(index).setWord_taget(string);
         }
         if(a==3) {
             Scanner sc = new Scanner(System.in);
-            for (; i < dictionary.word.size(); i++) {
-                if (dictionary.word.get(i).getWord_taget().equals(s)) {
-                    dictionary.word.subList(i,i+1).clear();
-                }
-            }
+            dictionary.word.subList(index,index+1).clear();
         }
     }
-    public void  dictionarySearcher(String s){
-        for(int i=0;i<dictionary.word.size();i++){
-            if(dictionary.word.get(i).getWord_taget().startsWith(s)){
-                System.out.println(dictionary.word.get(i).getWord_taget());
-            }
-        }
-    }
+// xuat ra file ma chong len nhau
     public void dictionaryExportToFile(){
-        String FILENAME ="out.txt";
+        System.out.println("Nhap ten file ban muon luu ket qua");
+        Scanner scan = new Scanner(System.in);
+        String str = scan.nextLine();
+        String FILENAME =str;
         BufferedWriter bw = null;
         FileWriter fw = null;
         try {
-            fw = new FileWriter(FILENAME, true);
+            fw = new FileWriter(FILENAME, false);
             bw = new BufferedWriter(fw);
             for(int i=0;i<dictionary.word.size();i++)
             {
@@ -114,7 +150,7 @@ public class DictionaryManagement extends Dictionary
                 bw.write("\t");
                 bw.write(dictionary.word.get(i).getWord_explain());
             }
-            System.out.println("Ghi them noi dung file xong!");
+            System.out.println("Ghi them noi dung file hoan thanh !");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
