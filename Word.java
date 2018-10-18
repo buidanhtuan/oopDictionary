@@ -1,10 +1,14 @@
-package com.company;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package javaapplication14;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.Scanner;
-
+/**
+ *
+ * @author User
+ */
 public class Word {
 
     private String word_taget;
@@ -33,18 +37,10 @@ public class Word {
     public String getWord_explain() {
         return word_explain;
     }
-    public static void main(String[] args) {
-        int n;
-        Scanner scan =new Scanner(System.in);
-        n=scan.nextInt();
-        DictionaryCommandline test = new DictionaryCommandline();
-        test.dictionaryManagement.insertFromCommandline(n);
-        test.dictionaryManagement.insertFromFile();
-        String s = scan.nextLine();
-        test.dictionaryManagement.dictionaryLookup(s);
-        test.dictionaryManagement.dictionarySearcher("H");
-        test.dictionaryManagement.dictionaryFix();
-        test.showAllwords();
-        test.dictionaryManagement.dictionaryExportToFile();
+    public void printWord() {
+        System.out.printf("%-20s%-20s\n", word_taget, word_explain);
+    }
+    public int compareTo(String str) {
+        return this.word_taget.compareTo(str);
     }
 }

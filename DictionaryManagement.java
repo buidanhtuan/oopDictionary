@@ -1,17 +1,22 @@
-package com.company;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package javaapplication14;
 
-import com.sun.deploy.panel.DeleteFilesDialog;
-import com.sun.xml.internal.ws.api.ha.StickyFeature;
-
+/**
+ *
+ * @author User
+ */
 import java.util.*;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class DictionaryManagement extends Dictionary
+public class DictionaryManagement
 
 {
     public Dictionary dictionary = new Dictionary();
@@ -58,16 +63,15 @@ public class DictionaryManagement extends Dictionary
             System.out.println("Unable to open file");
         }
     }
-    public void dictionaryLookup() {
-        System.out.println("Nhap tu ban muon tim kiem chinh xac");
-        Scanner scan = new Scanner(System.in);
-        String str = scan.nextLine();
+    public String dictionaryLookup(String str) {
+        
         int i= binarySreachWord(str);
         if(i==-1) {
-            System.out.println("Khong tim duoc tu "+str);
+            return "";
         }
         else
-            dictionary.word.get(i).printWord();
+           return  dictionary.word.get(i).getWord_explain();
+        
 
     }
     public void  dictionarySearcher(){
@@ -133,22 +137,18 @@ public class DictionaryManagement extends Dictionary
         }
     }
 // xuat ra file ma chong len nhau
-    public void dictionaryExportToFile(){
-        System.out.println("Nhap ten file ban muon luu ket qua");
-        Scanner scan = new Scanner(System.in);
-        String str = scan.nextLine();
-        String FILENAME =str;
+    public void dictionaryExportToFile(String s){
         BufferedWriter bw = null;
         FileWriter fw = null;
         try {
-            fw = new FileWriter(FILENAME, false);
+            fw = new FileWriter(s, false);
             bw = new BufferedWriter(fw);
             for(int i=0;i<dictionary.word.size();i++)
             {
-                bw.newLine();
                 bw.write(dictionary.word.get(i).getWord_taget());
                 bw.write("\t");
                 bw.write(dictionary.word.get(i).getWord_explain());
+                bw.newLine();
             }
             System.out.println("Ghi them noi dung file hoan thanh !");
         } catch (IOException e) {
@@ -171,4 +171,5 @@ public class DictionaryManagement extends Dictionary
         }
 
     }
+ 
 }

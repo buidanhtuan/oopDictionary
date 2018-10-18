@@ -1,7 +1,16 @@
-package com.company;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package javaapplication14;
 
 import java.util.Scanner;
 
+/**
+ *
+ * @author User
+ */
 public class DictionaryCommandline {
     public DictionaryManagement dictionaryManagement = new DictionaryManagement();
     public void showAllwords(){
@@ -21,7 +30,7 @@ public class DictionaryCommandline {
         DictionaryCommandline advan = new DictionaryCommandline();
         advan.dictionaryManagement.insertFromFile();
         advan.showAllwords();
-        advan.dictionaryManagement.dictionaryLookup();
+        advan.dictionaryManagement.dictionaryLookup(s);
 
     }
     public static void main(String[] args) {
@@ -47,7 +56,7 @@ public class DictionaryCommandline {
                     test.dictionaryManagement.dictionarySearcher();
                     break;
                 case 2:
-                    test.dictionaryManagement.dictionaryLookup();
+                    test.dictionaryManagement.dictionaryLookup("hi");
                     break;
                 case 3:
                     test.dictionaryManagement.insertFromCommandline();
@@ -59,7 +68,7 @@ public class DictionaryCommandline {
                     test.showAllwords();
                     break;
                 case 6:
-                    test.dictionaryManagement.dictionaryExportToFile();
+                    test.dictionaryManagement.dictionaryExportToFile("dictionaries.txt");
                     break;
                 case 7:
                     System.out.println("Thank for watching");
